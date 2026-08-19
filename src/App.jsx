@@ -4,14 +4,34 @@ import "./App.css";
 function App() {
   const [search, setSearch] = useState("");
   const dancers = [
-    "Camila Valderrama",
-    "Andrea Orejuela",
-    "Sofia Benavides",
-    "Valentina Ramirez",
-    "Daniela estupiñan",
+    {
+      name: "Camila Valderrama",
+      id: 1,
+      available: true,
+    },
+    {
+      name: "Andrea Orejuela",
+      id: 2,
+      available: true,
+    },
+    {
+      name: "Sofia Benavides",
+      id: 3,
+      available: true,
+    },
+    {
+      name: "Valentina Ramirez",
+      id: 4,
+      available: true,
+    },
+    {
+      name: "Daniela estupiñan",
+      id: 5,
+      available: true,
+    },
   ];
   const filteredDancers = dancers.filter((dancer) =>
-    dancer.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+    dancer.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
   );
   return (
     <>
@@ -38,10 +58,10 @@ function App() {
                 {index + 1}.
               </p>
               <p className="text-lg font-semibold text-white text-center flex-2 bg-yellow-500">
-                {dancer}
+                {dancer.name}
               </p>
               <p className="text-lg font-semibold text-white text-center flex-3 bg-blue-500 mx-2 ">
-                ******************
+                {dancer.available}
               </p>
             </div>
           </div>
