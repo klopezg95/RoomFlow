@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   const [search, setSearch] = useState("");
-  const dancers = [
+  const [dancers, setDancers] = useState([
     {
       name: "Camila Valderrama",
       id: 1,
@@ -29,10 +29,23 @@ function App() {
       id: 5,
       available: true,
     },
-  ];
+  ]);
+
+  // Filter dancers based on the search input
   const filteredDancers = dancers.filter((dancer) =>
     dancer.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
   );
+  // Function to change the availability of a dancer
+  const changeAvailability = (id) => {
+    const newDancers = dancers.map((dancer) => {
+      if (dancer.id === id) {
+        return { ...dancer, available: !dancer.available };
+      }
+      return dancer;
+    });
+    setDancers(newDancers);
+  };
+
   return (
     <>
       <div className="flex flex-col items-center justify-center ">
@@ -51,18 +64,22 @@ function App() {
         {filteredDancers.map((dancer, index) => (
           <div
             key={index}
-            className="bg-green-300 p-4 my-2 rounded-lg  hover:bg-green-400 transition-colors duration-300 w-xl"
-          >
+            className="bg-green-300 p-4 my-2 rounded-lg  hover:bg-green-400 transition-colors duration-300 w-xl">
             <div className="bg-amber-900 flex ">
-              <p className="text-lg font-semibold text-white  text-center flex-initial mx-2 bg-red-700">
+              <p className="text-lg font-semibold text-white  text-center flex-initial ml-2 px-1 bg-purple-700">
                 {index + 1}.
               </p>
-              <p className="text-lg font-semibold text-white text-center flex-2 bg-yellow-500">
+              <p className="text-lg font-semibold text-white text-center flex-3 bg-yellow-500 px-1">
                 {dancer.name}
               </p>
-              <p className="text-lg font-semibold text-white text-center flex-3 bg-blue-500 mx-2 ">
-                {dancer.available}
+              <p className="text-lg font-semibold text-white text-center flex-2 bg-blue-500 ">
+                *************
               </p>
+              <button
+                className={`text-lg font-semibold text-white text-center flex-1 mr-2 px-1  w-1 cursor-pointer ${dancer.available ? "bg-green-500" : "bg-red-500"}`}
+                onClick={() => changeAvailability(dancer.id)}>
+                {dancer.available ? "Available" : "Busy"}
+              </button>
             </div>
           </div>
         ))}
