@@ -1,7 +1,15 @@
 import React from "react";
 
 function Dancer(props) {
-  const { filteredDancers, search, setSearch, changeAvailability } = props;
+  const {
+    filteredDancers,
+    search,
+    setSearch,
+    changeAvailability,
+    setSelectedDancer,
+    selectedDancer,
+  } = props;
+
   return (
     <div className="flex flex-col items-center justify-center bg-purple-300 w-full">
       <div className="flex flex-col items-center justify-center ">
@@ -20,7 +28,11 @@ function Dancer(props) {
         {filteredDancers.map((dancer, index) => (
           <div
             key={dancer.id}
-            className="bg-green-300 p-4 my-2 rounded-lg  hover:bg-green-400 transition-colors duration-300 w-xl">
+            className={`bg-green-300 p-4 my-2 rounded-lg ${selectedDancer?.id === dancer.id ? "bg-green-400" : "bg-green-300"} hover:bg-green-400 transition-colors duration-300 w-xl`}
+            onClick={() => {
+              setSelectedDancer(dancer);
+              console.log(`Selected dancer: ${dancer.name}`);
+            }}>
             <div className="bg-amber-900 flex ">
               <p className="text-lg font-semibold text-white  text-center flex-initial ml-2 px-1 bg-purple-700">
                 {dancer.id}.
@@ -33,7 +45,10 @@ function Dancer(props) {
               </p>
               <button
                 className={`text-lg font-semibold text-white text-center flex-1 mr-2 px-1  w-1 cursor-pointer ${dancer.available ? "bg-green-500" : "bg-red-500"}`}
-                onClick={() => changeAvailability(dancer.id)}>
+                onClick={(e) => {
+                  e.stopPropagation();
+                  changeAvailability(dancer.id);
+                }}>
                 {dancer.available ? "Available" : "Busy"}
               </button>
             </div>

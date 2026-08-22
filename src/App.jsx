@@ -36,8 +36,7 @@ function App() {
     {
       name: "Room 1",
       id: 1,
-      available: false,
-      dancer: "Camila Valderrama",
+      available: true,
     },
     {
       name: "Room 2",
@@ -80,8 +79,10 @@ function App() {
           search={search}
           setSearch={setSearch}
           changeAvailability={changeAvailability}
+          selectedDancer={selectedDancer}
+          setSelectedDancer={setSelectedDancer}
         />
-        <Rooms rooms={rooms} />
+        <Rooms rooms={rooms} setRooms={setRooms} selectedDancer={selectedDancer} />
       </div>
     </>
   );
