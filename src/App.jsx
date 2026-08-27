@@ -82,7 +82,14 @@ function App() {
           selectedDancer={selectedDancer}
           setSelectedDancer={setSelectedDancer}
         />
-        <Rooms rooms={rooms} setRooms={setRooms} selectedDancer={selectedDancer} />
+        <Rooms
+          rooms={rooms}
+          setRooms={setRooms}
+          selectedDancer={selectedDancer}
+          setSelectedDancer={setSelectedDancer}
+          dancers={dancers}
+          setDancers={setDancers}
+        />
       </div>
     </>
   );

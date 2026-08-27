@@ -30,8 +30,15 @@ function Dancer(props) {
             key={dancer.id}
             className={`bg-green-300 p-4 my-2 rounded-lg ${selectedDancer?.id === dancer.id ? "bg-green-400" : "bg-green-300"} hover:bg-green-400 transition-colors duration-300 w-xl`}
             onClick={() => {
-              setSelectedDancer(dancer);
-              console.log(`Selected dancer: ${dancer.name}`);
+              if (dancer.available) {
+                if (dancer.id === selectedDancer?.id) {
+                  setSelectedDancer(null);
+                  console.log("quitaste la seleccion");
+                } else {
+                  setSelectedDancer(dancer);
+                  console.log(`Selected dancer: ${dancer.name}`);
+                }
+              }
             }}>
             <div className="bg-amber-900 flex ">
               <p className="text-lg font-semibold text-white  text-center flex-initial ml-2 px-1 bg-purple-700">

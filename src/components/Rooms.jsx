@@ -1,7 +1,7 @@
 import React from "react";
 
 function Rooms(props) {
-  const { rooms, setRooms, selectedDancer } = props;
+  const { rooms, setRooms, selectedDancer, setSelectedDancer, dancers, setDancers } = props;
 
   const assignDancerToRoom = (roomId) => {
     if (!selectedDancer) {
@@ -10,6 +10,14 @@ function Rooms(props) {
     const newRooms = rooms.map((room) => {
       if (room.id === roomId) {
         if (room.available) {
+          const newDancers = dancers.map((dancer) => {
+            if (dancer.id === selectedDancer.id) {
+              return { ...dancer, available: false };
+            }
+            return dancer;
+          });
+          setSelectedDancer(null);
+          setDancers(newDancers);
           return {
             ...room,
             dancer: selectedDancer.name,
@@ -19,6 +27,25 @@ function Rooms(props) {
           alert("This room is already occupied. Please select another room.");
           return room;
         }
+      }
+      return room;
+    });
+    setRooms(newRooms);
+  };
+  const releaseRoom = (roomId) => {
+    const newRooms = rooms.map((room) => {
+      if (room.id === roomId) {
+        if (room.available) {
+          return room;
+        }
+        const newDancers = dancers.map((dancer) => {
+          if (room.dancer === dancer.name) {
+            return { ...dancer, available: true };
+          }
+          return dancer;
+        });
+        setDancers(newDancers);
+        return { ...room, dancer: null, available: true };
       }
       return room;
     });
