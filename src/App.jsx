@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dancer from "./components/Dancers";
 import Rooms from "./components/Rooms";
 import "./App.css";
@@ -37,29 +37,43 @@ function App() {
       name: "Room 1",
       id: 1,
       available: true,
+      startTime: null,
     },
     {
       name: "Room 2",
       id: 2,
       available: true,
+      startTime: null,
     },
     {
       name: "Room 3",
       id: 3,
       available: true,
+      startTime: null,
     },
     {
       name: "Room 4",
       id: 4,
       available: true,
+      startTime: null,
     },
   ]);
   const [selectedDancer, setSelectedDancer] = useState(null);
+  const [timer, setTimer] = useState(0);
 
   // Filter dancers based on the search input
   const filteredDancers = dancers.filter((dancer) =>
     dancer.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
   );
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimer((currentTimer) => currentTimer + 1);
+    }, 1000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+  // console.log(timer);
   // Function to change the availability of a dancer
   const changeAvailability = (id) => {
     const newDancers = dancers.map((dancer) => {
