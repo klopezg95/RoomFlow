@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Rooms(props) {
   const { rooms, setRooms, selectedDancer, setSelectedDancer, dancers, setDancers } = props;
+  const [roomToRelease, setRoomToRelease] = useState(null);
 
   const assignDancerToRoom = (roomId) => {
     if (!selectedDancer) {
@@ -53,17 +54,22 @@ function Rooms(props) {
     setRooms(newRooms);
   };
 
+  const getElapsedTime = (startTime) => {
+    const elapsedTime = startTime ? Date.now() - startTime : 0;
+    const seconds = (Math.floor(elapsedTime / 1000) % 60).toString().padStart(2, "0");
+    const minutes = (Math.floor(elapsedTime / 60000) % 60).toString().padStart(2, "0");
+    const hours = Math.floor(elapsedTime / 3600000)
+      .toString()
+      .padStart(2, "0");
+    return { hours, minutes, seconds };
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-full bg-blue-300">
       <h1 className="text-4xl font-bold py-4 text-white">Private rooms</h1>
       <div>
         {rooms.map((room) => {
-          const elapsedTime = room.startTime ? Date.now() - room.startTime : 0;
-          const seconds = (Math.floor(elapsedTime / 1000) % 60).toString().padStart(2, "0");
-          const minutes = (Math.floor(elapsedTime / 60000) % 60).toString().padStart(2, "0");
-          const hours = Math.floor(elapsedTime / 3600000)
-            .toString()
-            .padStart(2, "0");
+          const { hours, minutes, seconds } = getElapsedTime(room.startTime);
           return (
             <div
               key={room.id}
@@ -89,16 +95,45 @@ function Rooms(props) {
                 {room.available ? "Available" : "Occupied"}
               </p>
               {room.dancer && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    releaseRoom(room.id);
-                  }}
-                  className="bg-blue-300 rounded-lg w-auto p-2 mt-2 cursor-pointer text-white
+                <>
+                  {roomToRelease === room.id && (
+                    // Release confirmation or additional UI can be added here
+                    <div className="flex flex-col items-center justify-center mt-2">
+                      <p className="text-white text-2xl">
+                        Are you sure you want to release this room?
+                      </p>
+                      <div className="flex justify-center mt-2">
+                        <button
+                          className="bg-green-500 rounded-lg w-auto p-2 mt-2 mr-2 cursor-pointer text-white
+                         hover:bg-green-700"
+                          onClick={() => {
+                            releaseRoom(room.id);
+                            setRoomToRelease(null);
+                          }}>
+                          Confirm
+                        </button>
+                        <button
+                          className="bg-red-500 rounded-lg w-auto p-2 mt-2 ml-2 cursor-pointer text-white
+                         hover:bg-red-700"
+                          onClick={() => setRoomToRelease(null)}>
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log("RELEASE CLICK:", room.id);
+                      setRoomToRelease(room.id);
+                      // releaseRoom(roomToRelease);
+                    }}
+                    className="bg-blue-300 rounded-lg w-auto p-2 mt-2 cursor-pointer text-white
                 hover:bg-blue-900
                  ">
-                  RELEASE
-                </button>
+                    RELEASE
+                  </button>
+                </>
               )}
             </div>
           );

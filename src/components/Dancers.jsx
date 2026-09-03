@@ -50,14 +50,15 @@ function Dancer(props) {
               <p className="text-lg font-semibold text-white text-center flex-2 bg-blue-500 ">
                 *************
               </p>
-              <button
+              <p
                 className={`text-lg font-semibold text-white text-center flex-1 mr-2 px-1  w-1 cursor-pointer ${dancer.available ? "bg-green-500" : "bg-red-500"}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  changeAvailability(dancer.id);
-                }}>
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   changeAvailability(dancer.id);
+                // }}
+              >
                 {dancer.available ? "Available" : "Busy"}
-              </button>
+              </p>
             </div>
           </div>
         ))}
