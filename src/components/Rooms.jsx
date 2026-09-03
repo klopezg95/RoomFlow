@@ -96,31 +96,6 @@ function Rooms(props) {
               </p>
               {room.dancer && (
                 <>
-                  {roomToRelease === room.id && (
-                    // Release confirmation or additional UI can be added here
-                    <div className="flex flex-col items-center justify-center mt-2">
-                      <p className="text-white text-2xl">
-                        Are you sure you want to release this room?
-                      </p>
-                      <div className="flex justify-center mt-2">
-                        <button
-                          className="bg-green-500 rounded-lg w-auto p-2 mt-2 mr-2 cursor-pointer text-white
-                         hover:bg-green-700"
-                          onClick={() => {
-                            releaseRoom(room.id);
-                            setRoomToRelease(null);
-                          }}>
-                          Confirm
-                        </button>
-                        <button
-                          className="bg-red-500 rounded-lg w-auto p-2 mt-2 ml-2 cursor-pointer text-white
-                         hover:bg-red-700"
-                          onClick={() => setRoomToRelease(null)}>
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -138,6 +113,34 @@ function Rooms(props) {
             </div>
           );
         })}
+        // Release confirmation dialog MODAL
+        {roomToRelease && (
+          // Release confirmation or additional UI can be added here
+          <div className=" fixed inset-0 flex flex-col items-center justify-center bg-black/50">
+            <div className="bg-gray-800 p-4 rounded-lg ">
+              <p className="text-white text-2xl">
+                Are you sure you want to release the room {roomToRelease}
+              </p>
+              <div className="flex justify-center mt-2">
+                <button
+                  className="bg-green-500 rounded-lg w-auto p-2 mt-2 mr-2 cursor-pointer text-white
+                         hover:bg-green-700"
+                  onClick={() => {
+                    releaseRoom(roomToRelease);
+                    setRoomToRelease(null);
+                  }}>
+                  Confirm
+                </button>
+                <button
+                  className="bg-red-500 rounded-lg w-auto p-2 mt-2 ml-2 cursor-pointer text-white
+                         hover:bg-red-700"
+                  onClick={() => setRoomToRelease(null)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
