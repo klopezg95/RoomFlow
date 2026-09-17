@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPause, faPlay, faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 
 function Rooms(props) {
   const { rooms, setRooms, selectedDancer, setSelectedDancer, dancers, setDancers } = props;
   const [roomToRelease, setRoomToRelease] = useState(null);
-
+  // Function to assign a dancer to a room
   const assignDancerToRoom = (roomId) => {
     if (!selectedDancer) {
       return;
@@ -34,6 +36,7 @@ function Rooms(props) {
     });
     setRooms(newRooms);
   };
+  // Function to release a room and make the dancer available again
   const releaseRoom = (roomId) => {
     const newRooms = rooms.map((room) => {
       if (room.id === roomId) {
@@ -47,15 +50,29 @@ function Rooms(props) {
           return dancer;
         });
         setDancers(newDancers);
-        return { ...room, dancer: null, available: true, startTime: null };
+        return {
+          ...room,
+          dancer: null,
+          available: true,
+          startTime: null,
+          pause: false,
+          pauseTime: null,
+        };
       }
       return room;
     });
     setRooms(newRooms);
   };
-
-  const getElapsedTime = (startTime) => {
-    const elapsedTime = startTime ? Date.now() - startTime : 0;
+  // Function to calculate elapsed time
+  const getElapsedTime = (currentRoom) => {
+    let elapsedTime = 0;
+    if (currentRoom.startTime) {
+      if (!currentRoom.pause) {
+        elapsedTime = Date.now() - currentRoom.startTime;
+      } else {
+        elapsedTime = currentRoom.pauseTime - currentRoom.startTime;
+      }
+    }
     const seconds = (Math.floor(elapsedTime / 1000) % 60).toString().padStart(2, "0");
     const minutes = (Math.floor(elapsedTime / 60000) % 60).toString().padStart(2, "0");
     const hours = Math.floor(elapsedTime / 3600000)
@@ -63,13 +80,31 @@ function Rooms(props) {
       .padStart(2, "0");
     return { hours, minutes, seconds };
   };
+  // Function to pause a room
+  const pauseRoom = (roomId) => {
+    const newRooms = rooms.map((room) => {
+      if (room.id === roomId) {
+        //PAUSE
+        if (!room.pause) {
+          return { ...room, pause: !room.pause, pauseTime: Date.now() };
+        }
+        //RESUME
+        const pausedDuration = Date.now() - room.pauseTime;
+
+        const adjustedStartTime = room.startTime + pausedDuration;
+        return { ...room, pause: false, startTime: adjustedStartTime, pauseTime: null };
+      }
+      return room;
+    });
+    setRooms(newRooms);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full bg-blue-300">
       <h1 className="text-4xl font-bold py-4 text-white">Private rooms</h1>
       <div>
         {rooms.map((room) => {
-          const { hours, minutes, seconds } = getElapsedTime(room.startTime);
+          const { hours, minutes, seconds } = getElapsedTime(room);
           return (
             <div
               key={room.id}
@@ -95,7 +130,7 @@ function Rooms(props) {
                 {room.available ? "Available" : "Occupied"}
               </p>
               {room.dancer && (
-                <>
+                <div className="flex flex-row items-center justify-between w-full">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -106,14 +141,28 @@ function Rooms(props) {
                     className="bg-blue-300 rounded-lg w-auto p-2 mt-2 cursor-pointer text-white
                 hover:bg-blue-900
                  ">
-                    RELEASE
+                    <FontAwesomeIcon icon={faDoorOpen} />
+                    <span>Release</span>
                   </button>
-                </>
+                  <button
+                    className="bg-blue-500 rounded-lg w-15 p-2 mt-2 cursor-pointer text-white
+                hover:bg-blue-900"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      pauseRoom(room.id);
+                    }}>
+                    {room.pause ? (
+                      <FontAwesomeIcon icon={faPlay} />
+                    ) : (
+                      <FontAwesomeIcon icon={faPause} />
+                    )}
+                  </button>
+                </div>
               )}
             </div>
           );
         })}
-        // Release confirmation dialog MODAL
+        {/* Release confirmation dialog MODAL */}
         {roomToRelease && (
           // Release confirmation or additional UI can be added here
           <div className=" fixed inset-0 flex flex-col items-center justify-center bg-black/50">

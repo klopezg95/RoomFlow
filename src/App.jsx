@@ -38,24 +38,32 @@ function App() {
       id: 1,
       available: true,
       startTime: null,
+      pause: false,
+      pauseTime: null,
     },
     {
       name: "Room 2",
       id: 2,
       available: true,
       startTime: null,
+      pause: false,
+      pauseTime: null,
     },
     {
       name: "Room 3",
       id: 3,
       available: true,
       startTime: null,
+      pause: false,
+      pauseTime: null,
     },
     {
       name: "Room 4",
       id: 4,
       available: true,
       startTime: null,
+      pause: false,
+      pauseTime: null,
     },
   ]);
   const [selectedDancer, setSelectedDancer] = useState(null);
